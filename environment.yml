@@ -1,0 +1,21 @@
+name: openai-client
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - openai>=1.0.0
+    - python-dotenv>=1.0.0
+    - pydantic>=2.0.0
+    - httpx>=0.24.0
+    - asyncio-mqtt>=0.16.0
+    - pytest>=7.0.0
+    - pytest-asyncio>=0.21.0
+    - black>=23.0.0
+    - isort>=5.12.0
+    - mypy>=1.0.0
+    - pre-commit>=3.0.0
+    - rich>=13.0.0
+    - typer>=0.9.0
