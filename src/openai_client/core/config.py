@@ -7,7 +7,7 @@ from typing import Any, Optional
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, validator
 
-from .exceptions import OpenAIConfigError
+from ..exceptions import OpenAIConfigError
 
 
 class OpenAIConfig(BaseModel):
@@ -99,10 +99,25 @@ class OpenAIConfig(BaseModel):
         if not api_key:
             raise OpenAIConfigError("OPENAI_API_KEY environment variable is required")
 
+        # Get organization from environment, but only if it's not empty or a placeholder
+        organization = os.getenv("OPENAI_ORGANIZATION")
+        if organization:
+            organization = organization.strip()
+            # Treat empty strings, placeholder values, and common placeholder patterns as None
+            if (
+                organization == ""
+                or organization == "org-your-organization-id-here"
+                or organization.startswith("org-")
+                and "placeholder" in organization.lower()
+                or organization.startswith("org-")
+                and "your" in organization.lower()
+            ):
+                organization = None
+
         return cls(
             api_key=api_key,
             base_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
-            organization=os.getenv("OPENAI_ORGANIZATION"),
+            organization=organization,
             timeout=int(os.getenv("OPENAI_TIMEOUT", "60")),
             max_retries=int(os.getenv("OPENAI_MAX_RETRIES", "3")),
             log_level=os.getenv("OPENAI_LOG_LEVEL", "INFO"),
@@ -142,7 +157,8 @@ class OpenAIConfig(BaseModel):
             "Content-Type": "application/json",
         }
 
-        if self.organization:
+        # Only include organization header if organization is set and not empty
+        if self.organization and self.organization.strip():
             headers["OpenAI-Organization"] = self.organization
 
         return headers

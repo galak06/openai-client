@@ -7,7 +7,14 @@ chat completions, embeddings, image generation, and more.
 
 from .core.client import OpenAIClient
 from .core.config import OpenAIConfig
-from .core.exceptions import OpenAIAPIError, OpenAIError, OpenAIValidationError
+from .exceptions import (
+    OpenAIAPIError,
+    OpenAIConfigError,
+    OpenAIError,
+    OpenAIQuotaError,
+    OpenAIRateLimitError,
+    OpenAIValidationError,
+)
 
 __version__ = "0.1.0"
 __author__ = "Your Name"
@@ -19,4 +26,7 @@ __all__ = [
     "OpenAIError",
     "OpenAIAPIError",
     "OpenAIValidationError",
+    "OpenAIConfigError",
+    "OpenAIQuotaError",
+    "OpenAIRateLimitError",
 ]
